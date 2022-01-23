@@ -4,7 +4,7 @@
   "rules": {
     "prefer-const": "warn",
     "react/display-name": "off",
-    "@next/next/no-img-element": "warn",
+    "@next/next/no-img-element": "off",
     "unused-imports/no-unused-imports": "warn",
     "import/newline-after-import": "error",
     "no-restricted-imports": ["warn", { "patterns": ["../**"] }],

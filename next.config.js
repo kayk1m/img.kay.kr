@@ -14,9 +14,10 @@ const securityHeaders = [
       `base-uri 'self'`,
       `style-src 'self' fonts.googleapis.com 'unsafe-inline'`,
       `font-src 'self' fonts.gstatic.com`,
+      `worker-src 'self' data: blob:`,
       `script-src 'self' 'unsafe-eval' 'unsafe-inline'`,
       `object-src 'self'`,
-      `img-src 'self' data:`,
+      `img-src 'self' data: blob:`,
     ].join(';'),
   },
 ];
