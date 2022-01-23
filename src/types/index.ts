@@ -47,4 +47,4 @@ export type XOR<T, U> = T | U extends __
   ? (Without<T, U> & U) | (Without<U, T> & T)
   : T | U;
 
-type Unpacked<T> = T extends (infer U)[] ? U : T;
+export type MaybePromise<T> = T | Promise<T>;
