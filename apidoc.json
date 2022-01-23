@@ -1,0 +1,8 @@
+{
+    "name": "project name",
+    "version": "0.1.0",
+    "description": "project description",
+    "title": "project title",
+    "url" : "https://my-project.com",
+    "sampleUrl": null
+}

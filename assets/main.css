@@ -1,0 +1,32 @@
+@tailwind base;
+
+@layer base {
+  html {
+    @apply h-full;
+  }
+
+  body {
+    @apply relative h-full text-gray-900 text-base font-inter;
+  }
+
+  #__next {
+    @apply h-full;
+  }
+
+  a,
+  button {
+    @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-400;
+  }
+
+  [type='checkbox'] {
+    @apply text-blue-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-400;
+  }
+
+  [type='radio'] {
+    @apply text-blue-400 border-gray-400 focus:outline-none focus:ring-0 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-400;
+  }
+}
+
+@tailwind components;
+
+@tailwind utilities;

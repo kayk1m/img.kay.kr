@@ -1,0 +1,51 @@
+{
+  "extends": ["next", "next/core-web-vitals", "prettier"],
+  "plugins": ["unused-imports"],
+  "rules": {
+    "prefer-const": "warn",
+    "react/display-name": "off",
+    "@next/next/no-img-element": "warn",
+    "unused-imports/no-unused-imports": "warn",
+    "import/newline-after-import": "error",
+    "import/order": [
+      "error",
+      {
+        "newlines-between": "always",
+        "alphabetize": { "order": "asc", "caseInsensitive": true },
+        "pathGroups": [
+          {
+            "pattern": "@assets/**",
+            "group": "internal",
+            "position": "after"
+          },
+          {
+            "pattern": "@src/**",
+            "group": "internal",
+            "position": "after"
+          },
+          {
+            "pattern": "@src/backend/**",
+            "group": "internal",
+            "position": "after"
+          },
+          {
+            "pattern": "@src/frontend/**",
+            "group": "internal",
+            "position": "after"
+          }
+        ],
+        "groups": [
+          "builtin",
+          "external",
+          "internal",
+          "unknown",
+          "parent",
+          "sibling",
+          "index",
+          "object",
+          "type"
+        ]
+      }
+    ]
+  }
+}
