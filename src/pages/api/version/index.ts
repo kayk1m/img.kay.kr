@@ -1,4 +1,4 @@
-import { NextApiBuilder } from '@src/backend/api-wrapper';
+import { NextApiBuilder } from '$src/backend/api-wrapper';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 

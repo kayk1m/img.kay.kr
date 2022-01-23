@@ -1,6 +1,6 @@
 import NextLink, { type LinkProps } from 'next/link';
 
-import type { Expand, PropsOf } from '@src/types';
+import type { Expand, PropsOf } from '$src/types';
 
 type Props = Expand<Omit<PropsOf<'a'>, 'href'> & Pick<LinkProps, 'href'>>;
 

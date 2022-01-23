@@ -47,25 +47,4 @@ export type XOR<T, U> = T | U extends __
   ? (Without<T, U> & U) | (Without<U, T> & T)
   : T | U;
 
-// Client Encoding
-// export type EncodeId<T> = Omit<
-//   {
-//     [Prop in keyof T as Prop extends '_id' ? 'Id' : Prop]: Prop extends '_id' ? string : T[Prop];
-//   },
-//   '_id'
-// >;
-export type EncodeId<T> = T extends ObjectWithId
-  ? Omit<
-      {
-        [Prop in keyof T as Prop extends '_id' ? 'Id' : Prop]: Prop extends '_id'
-          ? string
-          : EncodeId<T[Prop]>;
-      },
-      '_id'
-    >
-  : T extends Array<any>
-  ? Array<EncodeId<Unpacked<T>>>
-  : T;
-
-type ObjectWithId = { _id: any };
 type Unpacked<T> = T extends (infer U)[] ? U : T;

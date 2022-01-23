@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import useSWR from 'swr';
 
-import type { ModalProps } from '@src/frontend/components/ui/Modal';
+import type { ModalProps } from '$src/frontend/components/ui/Modal';
 
 const MODAL_KEY = '@modal' as const;
 

@@ -1,4 +1,4 @@
-import { errorHandler } from '@src/backend/api-wrapper/error-handler';
+import { errorHandler } from '$src/backend/api-wrapper/error-handler';
 
 import type { NextApiHandler } from 'next';
 

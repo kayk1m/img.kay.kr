@@ -16,8 +16,7 @@
     "importsNotUsedAsValues": "error",
     "baseUrl": ".",
     "paths": {
-      "@assets/*": ["assets/*"],
-      "@src/*": ["src/*"]
+      "$src/*": ["src/*"]
     },
     "incremental": true
   },

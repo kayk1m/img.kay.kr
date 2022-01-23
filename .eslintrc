@@ -7,6 +7,7 @@
     "@next/next/no-img-element": "warn",
     "unused-imports/no-unused-imports": "warn",
     "import/newline-after-import": "error",
+    "no-restricted-imports": ["warn", { "patterns": ["../**"] }],
     "import/order": [
       "error",
       {
@@ -14,22 +15,12 @@
         "alphabetize": { "order": "asc", "caseInsensitive": true },
         "pathGroups": [
           {
-            "pattern": "@assets/**",
+            "pattern": "$src/**",
             "group": "internal",
             "position": "after"
           },
           {
-            "pattern": "@src/**",
-            "group": "internal",
-            "position": "after"
-          },
-          {
-            "pattern": "@src/backend/**",
-            "group": "internal",
-            "position": "after"
-          },
-          {
-            "pattern": "@src/frontend/**",
+            "pattern": "./**",
             "group": "internal",
             "position": "after"
           }

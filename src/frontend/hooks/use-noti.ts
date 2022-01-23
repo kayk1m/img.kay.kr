@@ -1,7 +1,7 @@
 import { useCallback, useRef } from 'react';
 import useSWR from 'swr';
 
-import type { NotificationProps } from '@src/frontend/components/ui/Notification';
+import type { NotificationProps } from '$src/frontend/components/ui/Notification';
 
 const NOTI_KEY = '@noti' as const;
 

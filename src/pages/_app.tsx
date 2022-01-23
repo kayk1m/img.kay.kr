@@ -1,14 +1,14 @@
-import '@assets/main.css';
+import '$src/assets/main.css';
 import 'nprogress/nprogress.css';
 
 import { DefaultSeo } from 'next-seo';
 import useNProgress from 'next-use-nprogress';
 import Script from 'next/script';
 
-import { CommonLayout } from '@src/frontend/components/layout';
-import { Modal, Notification } from '@src/frontend/components/ui';
-import { useModal } from '@src/frontend/hooks/use-modal';
-import { useNoti } from '@src/frontend/hooks/use-noti';
+import { CommonLayout } from '$src/frontend/components/layout';
+import { Modal, Notification } from '$src/frontend/components/ui';
+import { useModal } from '$src/frontend/hooks/use-modal';
+import { useNoti } from '$src/frontend/hooks/use-noti';
 
 import type { AppProps } from 'next/app';
 

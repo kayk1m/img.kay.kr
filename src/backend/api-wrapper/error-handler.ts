@@ -2,8 +2,8 @@ import { StatusCodes } from 'http-status-codes';
 import Joi from 'joi';
 import { isResSent } from 'next/dist/shared/lib/utils';
 
-import { ApiError } from '@src/defines/errors';
-import { isProd } from '@src/utils/env';
+import { ApiError } from '$src/defines/errors';
+import { isProd } from '$src/utils/env';
 
 import type { ApiWrapper } from '.';
 import type { NextApiHandler } from 'next';
