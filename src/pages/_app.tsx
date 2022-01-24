@@ -34,6 +34,7 @@ export default function App({ Component, pageProps }: AppProps) {
       <Script src="/js/redirectIE.js" strategy="beforeInteractive" />
       <DefaultSeo
         title="Kay's Image Resizer"
+        description="super-fast image resizer web application"
         additionalLinkTags={[
           {
             rel: 'icon',
