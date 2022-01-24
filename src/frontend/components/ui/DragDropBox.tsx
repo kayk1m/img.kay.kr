@@ -2,11 +2,10 @@ import clsx from 'clsx';
 import { DragEvent, useState } from 'react';
 
 import { ApiError } from '$src/defines/errors';
+import { Loading } from '$src/frontend/components/core';
 import { useId } from '$src/frontend/hooks/use-id';
 import { useNoti } from '$src/frontend/hooks/use-noti';
 import type { MaybePromise } from '$src/types';
-
-import { Loading } from '../core';
 
 const VALID_FILE_TYPES = ['image/jpg', 'image/jpeg', 'image/png', 'image/webp'];
 
@@ -102,7 +101,7 @@ export default function DragDropBox({ className, onFileSelect, onError, loading 
               htmlFor={id}
               className="relative cursor-pointer rounded-md font-medium text-blue-800 hover:text-blue-600 focus-within:outline-none"
             >
-              <span>Upload a file</span>
+              <span>Choose an image</span>
               <input
                 id={id}
                 name="file-upload"
