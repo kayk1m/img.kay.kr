@@ -19,7 +19,7 @@ const qualities = [
   { label: 'low', value: 0.3 },
   { label: 'normal', value: 0.5 },
   { label: 'high', value: 0.7 },
-  { label: 'max', value: 1 },
+  // { label: 'max', value: 1 },
 ] as const;
 
 const extensions = [
