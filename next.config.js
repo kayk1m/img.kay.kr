@@ -15,7 +15,7 @@ const securityHeaders = [
       `style-src 'self' fonts.googleapis.com 'unsafe-inline'`,
       `font-src 'self' fonts.gstatic.com`,
       `worker-src 'self' data: blob:`,
-      `script-src 'self' 'unsafe-eval' 'unsafe-inline'`,
+      `script-src 'self' 'unsafe-eval'`,
       `object-src 'self'`,
       `img-src 'self' data: blob:`,
       `connect-src 'self' ws:`,
