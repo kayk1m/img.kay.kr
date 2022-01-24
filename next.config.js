@@ -1,6 +1,7 @@
-// @ts-check
-
 const { StatusCodes } = require('http-status-codes');
+// @ts-check
+const withPWA = require('next-pwa');
+const runtimeCaching = require('next-pwa/cache');
 
 const securityHeaders = [
   {
@@ -45,6 +46,8 @@ const nextConfig = {
       },
     ];
   },
+  pwa: { dest: 'public' },
+  runtimeCaching,
 };
 
-module.exports = nextConfig;
+module.exports = withPWA(nextConfig);
