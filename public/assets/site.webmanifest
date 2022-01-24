@@ -1,6 +1,6 @@
 {
-  "name": "NextJS App",
-  "short_name": "NextJS App",
+  "name": "Kay's Image Resizer",
+  "short_name": "Image Resizer",
   "icons": [
     {
       "src": "/asets/android-chrome-192x192.png",
