@@ -1,16 +1,8 @@
 @tailwind base;
 
 @layer base {
-  html {
-    @apply h-full;
-  }
-
   body {
-    @apply relative h-full text-gray-900 text-base font-inter;
-  }
-
-  #__next {
-    @apply h-full;
+    @apply relative text-gray-900 text-base font-sans;
   }
 
   a,

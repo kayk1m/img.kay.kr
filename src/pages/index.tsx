@@ -213,10 +213,10 @@ export default function IndexPage() {
               </div>
 
               {/* Qualities */}
-              <div>
+              <div className={clsx({ hidden: extension === 'png' })}>
                 <label>Quality</label>
                 <ResponsiveTabs
-                  className={clsx('mt-2', { hidden: extension === 'png' })}
+                  className="mt-2"
                   tabs={qualities}
                   state={quality}
                   setState={setQuality}
