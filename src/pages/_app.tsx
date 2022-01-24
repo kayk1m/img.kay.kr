@@ -35,7 +35,14 @@ export default function App({ Component, pageProps }: AppProps) {
       <DefaultSeo
         title="Kay's Image Resizer"
         description="super-fast image resizer web application"
-        additionalMetaTags={[{ name: 'theme-color', content: '#ffffff' }]}
+        additionalMetaTags={[
+          {
+            name: 'viewport',
+            content:
+              'width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no',
+          },
+          { name: 'theme-color', content: '#ffffff' },
+        ]}
         additionalLinkTags={[
           {
             rel: 'icon',
