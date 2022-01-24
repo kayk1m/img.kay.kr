@@ -12,13 +12,13 @@ const securityHeaders = [
     value: [
       `default-src 'self'`,
       `base-uri 'self'`,
-      `style-src 'self' fonts.googleapis.com 'unsafe-inline'`,
-      `font-src 'self' fonts.gstatic.com`,
+      `style-src 'self' 'unsafe-inline'`,
+      `font-src 'self'`,
       `worker-src 'self' data: blob:`,
-      `script-src 'self' 'unsafe-eval'`,
+      `script-src 'self' www.googletagmanager.com 'unsafe-eval'`,
       `object-src 'self'`,
       `img-src 'self' data: blob:`,
-      `connect-src 'self' ws:`,
+      `connect-src 'self' www.google-analytics.com analytics.google.com ws:`,
     ].join(';'),
   },
 ];
