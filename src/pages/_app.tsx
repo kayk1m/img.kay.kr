@@ -10,6 +10,7 @@ import { CommonLayout } from '$src/frontend/components/layout';
 import { Modal, Notification } from '$src/frontend/components/ui';
 import { useModal } from '$src/frontend/hooks/use-modal';
 import { useNoti } from '$src/frontend/hooks/use-noti';
+import { isProd } from '$src/utils/env';
 import { GTM } from '$src/utils/tag-manager';
 
 import type { AppProps } from 'next/app';
@@ -26,7 +27,7 @@ export default function App({ Component, pageProps }: AppProps) {
   const { noti, closeNoti } = useNoti();
 
   useEffect(() => {
-    GTM.initialize();
+    if (isProd()) GTM.initialize();
   }, []);
 
   return (
