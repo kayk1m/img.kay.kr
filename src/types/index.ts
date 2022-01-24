@@ -48,3 +48,4 @@ export type XOR<T, U> = T | U extends __
   : T | U;
 
 export type MaybePromise<T> = T | Promise<T>;
+export type MaybeReadonly<T> = T | Readonly<T>;
