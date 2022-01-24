@@ -1,3 +1,4 @@
+import { Switch, Transition } from '@headlessui/react';
 import { XIcon } from '@heroicons/react/outline';
 import clsx from 'clsx';
 import Pica from 'pica';
@@ -49,16 +50,25 @@ function calcSize({
 
 function buildFilename(
   name: string,
-  options: { resolution: Resolution; quality: Quality; extension: Extension },
+  options: {
+    custom?: { width: number; height: number };
+    resolution: Resolution;
+    quality: Quality;
+    extension: Extension;
+  },
 ) {
-  const { resolution, quality, extension } = options;
+  const { custom, resolution, quality, extension } = options;
   const isLossy = extension !== 'png';
 
   const nameWithoutExt = name.includes('.') ? name.split('.').slice(0, -1).join('.') : name;
   const qualityLevel = qualities.find(({ value }) => value === quality)!.label;
 
   return (
-    [nameWithoutExt, `${resolution}p`, isLossy && qualityLevel]
+    [
+      nameWithoutExt,
+      custom ? `${custom.width.toFixed(0)}x${custom.height.toFixed(0)}` : `${resolution}p`,
+      isLossy && qualityLevel,
+    ]
       .filter((value) => !!value)
       .join('-') + `.${extension}`
   );
@@ -82,6 +92,11 @@ export default function IndexPage() {
   const [resolution, setResolution] = useState<Resolution>(720);
   const [quality, setQuality] = useState<Quality>(0.7);
   const [extension, setExtension] = useState<Extension>('jpeg');
+  const [showCustom, setShowCustom] = useState(false);
+  const [customResolution, setCustomResolution] = useState<{
+    width: number;
+    height: number;
+  } | null>(null);
 
   const resTabs = selectedImage
     ? resolutions.filter(
@@ -95,7 +110,8 @@ export default function IndexPage() {
       URL.revokeObjectURL(selectedImage.blobUrl);
       setSelectedImage(null);
     }
-    setResolution(720);
+    setShowCustom(false);
+    setCustomResolution(null);
   };
 
   const handleFileSelect = (file: File) => {
@@ -112,6 +128,9 @@ export default function IndexPage() {
         size: file.size,
         file,
       });
+      setCustomResolution(
+        calcSize({ resolution: 720, width: image.naturalWidth, height: image.naturalHeight }),
+      );
       setLoading(false);
     };
     image.src = blobUrl;
@@ -133,6 +152,7 @@ export default function IndexPage() {
             const convertedBlobUrl = URL.createObjectURL(blob);
             downloadButtonRef.current.href = convertedBlobUrl;
             downloadButtonRef.current.download = buildFilename(selectedImage.name, {
+              custom: showCustom && customResolution ? customResolution : undefined,
               resolution,
               quality,
               extension,
@@ -192,13 +212,95 @@ export default function IndexPage() {
             <div className="space-y-4">
               {/* Resolutions */}
               <div>
-                <label>Resolution</label>
+                <div className="flex items-end justify-between">
+                  <label>Resolution</label>
+
+                  <Switch.Group as="div" className="flex items-center justify-between space-x-2">
+                    <Switch.Label as="span" className="text-sm" passive>
+                      Custom
+                    </Switch.Label>
+                    <Switch
+                      checked={showCustom}
+                      onChange={setShowCustom}
+                      className={clsx(
+                        showCustom ? 'bg-blue-600' : 'bg-gray-200',
+                        'relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500',
+                      )}
+                    >
+                      <span
+                        aria-hidden="true"
+                        className={clsx(
+                          showCustom ? 'translate-x-5' : 'translate-x-0',
+                          'pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200',
+                        )}
+                      />
+                    </Switch>
+                  </Switch.Group>
+                </div>
                 <ResponsiveTabs
                   className="mt-2"
                   tabs={resTabs}
                   state={resolution}
-                  setState={setResolution}
+                  setState={(resolution) => {
+                    setResolution(resolution);
+                    setCustomResolution(calcSize({ resolution, ...selectedImage }));
+                  }}
+                  disabled={showCustom}
                 />
+                {customResolution && (
+                  <Transition
+                    show={showCustom}
+                    className="mt-4 flex items-center space-x-4"
+                    enter="transition-opacity ease-out duration-150"
+                    enterFrom="opacity-0"
+                    enterTo="opacity-100"
+                    leave="transition-opacity ease-out duration-150"
+                    leaveFrom="opacity-100"
+                    leaveTo="opacity-0"
+                  >
+                    <div>
+                      <label htmlFor="width" className="sr-only">
+                        Width
+                      </label>
+                      <input
+                        type="number"
+                        name="width"
+                        id="width"
+                        className="shadow-sm block w-24 sm:text-sm border-gray-300 rounded-md"
+                        value={customResolution.width.toFixed(0).toString()}
+                        onChange={(e) => {
+                          const { width, height } = selectedImage;
+                          const newWidth = Number(e.target.value);
+                          const newHeight = (height / width) * newWidth;
+
+                          setCustomResolution({ width: newWidth, height: newHeight });
+                        }}
+                      />
+                    </div>
+                    <span aria-hidden className="text-sm font-medium text-gray-500">
+                      X
+                    </span>
+                    <div>
+                      <label htmlFor="height" className="sr-only">
+                        Height
+                      </label>
+                      <input
+                        type="number"
+                        name="height"
+                        id="height"
+                        className="shadow-sm block w-24 sm:text-sm border-gray-300 rounded-md"
+                        value={customResolution.height.toFixed(0).toString()}
+                        onChange={(e) => {
+                          const { width, height } = selectedImage;
+                          const newHeight = Number(e.target.value);
+                          const newWidth = (width / height) * newHeight;
+
+                          setCustomResolution({ width: newWidth, height: newHeight });
+                        }}
+                      />
+                    </div>
+                  </Transition>
+                )}
               </div>
 
               {/* Extensions */}
@@ -236,7 +338,7 @@ export default function IndexPage() {
           <canvas
             ref={canvasRef}
             className="hidden"
-            {...calcSize({ ...selectedImage, resolution })}
+            {...(showCustom ? customResolution : calcSize({ ...selectedImage, resolution }))}
           />
         </div>
       )}
