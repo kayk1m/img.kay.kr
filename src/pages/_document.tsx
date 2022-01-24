@@ -3,7 +3,7 @@ import Document, { Head, Html, Main, NextScript } from 'next/document';
 class MyDocument extends Document {
   render() {
     return (
-      <Html>
+      <Html lang="en">
         <Head>
           {/* This enables Font-Optimization(https://nextjs.org/docs/basic-features/font-optimization) feature. */}
           <link
