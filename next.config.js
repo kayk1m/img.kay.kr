@@ -15,7 +15,7 @@ const securityHeaders = [
       `style-src 'self' 'unsafe-inline'`,
       `font-src 'self'`,
       `worker-src 'self' data: blob:`,
-      `script-src 'self' www.googletagmanager.com 'unsafe-eval'`,
+      `script-src 'self' www.googletagmanager.com 'sha256-TXxkhhv5PbMCjHYmlg9z/7BJZyFLLrozKCYjRZVuuHg=' 'unsafe-eval'`,
       `object-src 'self'`,
       `img-src 'self' data: blob:`,
       `connect-src 'self' www.google-analytics.com analytics.google.com ws:`,
