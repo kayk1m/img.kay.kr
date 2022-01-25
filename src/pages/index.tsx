@@ -1,12 +1,25 @@
-import { Switch, Transition } from '@headlessui/react';
 import { XIcon } from '@heroicons/react/outline';
 import clsx from 'clsx';
-import Pica from 'pica';
-import { useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
+import Cropper from 'react-easy-crop';
 
-import { Button, DragDropBox, ResponsiveTabs } from '$src/frontend/components/ui';
+import { SizeInputGroup } from '$src/frontend/components/custom';
+import {
+  Button,
+  DragDropBox,
+  Fade,
+  ResponsiveTabs,
+  Tabs,
+  Toggle,
+} from '$src/frontend/components/ui';
+import { useNoti } from '$src/frontend/hooks/use-noti';
 import formatBytes from '$src/utils/format-bytes';
-import { createImage } from '$src/utils/image';
+import getCroppedCanvas, {
+  canvasToObjectURL,
+  createImage,
+  downloadImage,
+  resizeImage,
+} from '$src/utils/image';
 
 const resolutions = [
   { label: '360p', value: 360 },
@@ -86,19 +99,31 @@ type SelectedImage = {
 };
 
 export default function IndexPage() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const downloadButtonRef = useRef<HTMLAnchorElement>(null);
-
   const [loading, setLoading] = useState(false);
   const [selectedImage, setSelectedImage] = useState<SelectedImage | null>(null);
   const [resolution, setResolution] = useState<Resolution>(720);
   const [quality, setQuality] = useState<Quality>(0.7);
   const [extension, setExtension] = useState<Extension>('jpeg');
-  const [showCustom, setShowCustom] = useState(false);
+  const [aspectRatio, setAspectRatio] = useState<number | null>(null);
   const [customResolution, setCustomResolution] = useState<{
     width: number;
     height: number;
   } | null>(null);
+  const [customResolutionFlag, setCustomResolutionFlag] = useState(false);
+
+  // states for `react-easy-cropper`
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [rotation, setRotation] = useState(0);
+  const [zoom, setZoom] = useState(1);
+  const [cropSize, setCropSize] = useState({ width: 720, height: 720 });
+  const [croppedCanvas, setCroppedCanvas] = useState<HTMLCanvasElement | null>(null);
+
+  // notifications
+  const { showAlert } = useNoti();
+
+  useEffect(() => {
+    console.log('flag', customResolutionFlag);
+  }, [customResolutionFlag]);
 
   const resTabs = selectedImage
     ? resolutions.filter(
@@ -112,58 +137,74 @@ export default function IndexPage() {
       URL.revokeObjectURL(selectedImage.blobUrl);
       setSelectedImage(null);
     }
-    setShowCustom(false);
     setCustomResolution(null);
+    setCrop({ x: 0, y: 0 });
+    setRotation(0);
+    setZoom(1);
+    setCropSize({ width: 720, height: 720 });
+    if (croppedCanvas) croppedCanvas.remove();
+    setCroppedCanvas(null);
   };
 
   const handleFileSelect = (file: File) => {
     setLoading(true);
     const blobUrl = URL.createObjectURL(file);
 
-    createImage(blobUrl).then((image) => {
-      setSelectedImage({
-        name: file.name,
-        blobUrl,
-        width: image.naturalWidth,
-        height: image.naturalHeight,
-        size: file.size,
-        file,
-        image,
-      });
-      setCustomResolution(
-        calcSize({ resolution: 720, width: image.naturalWidth, height: image.naturalHeight }),
-      );
-      setLoading(false);
-    });
+    createImage(blobUrl)
+      .then((image) => {
+        setSelectedImage({
+          name: file.name,
+          blobUrl,
+          width: image.naturalWidth,
+          height: image.naturalHeight,
+          size: file.size,
+          file,
+          image,
+        });
+        setCustomResolution(
+          calcSize({ resolution, width: image.naturalWidth, height: image.naturalHeight }),
+        );
+      })
+      .catch(showAlert)
+      .finally(() => setLoading(false));
   };
 
   const handleClickDownload = () => {
-    if (!selectedImage || !canvasRef.current) return;
+    if (!selectedImage) return;
 
-    const pica = Pica();
-    pica
-      .resize(selectedImage.image, canvasRef.current)
-      .then((elem) => pica.toBlob(elem, `image/${extension}`, quality))
-      .then((blob) => {
-        if (downloadButtonRef.current) {
-          const convertedBlobUrl = URL.createObjectURL(blob);
-          downloadButtonRef.current.href = convertedBlobUrl;
-          downloadButtonRef.current.download = buildFilename(selectedImage.name, {
-            custom: showCustom && customResolution ? customResolution : undefined,
-            resolution,
-            quality,
-            extension,
-          });
+    const inputElem = aspectRatio !== null && croppedCanvas ? croppedCanvas : selectedImage.image;
+    const targetSize =
+      aspectRatio !== null
+        ? cropSize
+        : customResolutionFlag && customResolution
+        ? customResolution
+        : calcSize({ ...selectedImage, resolution });
 
-          downloadButtonRef.current.click();
-          URL.revokeObjectURL(convertedBlobUrl);
-        }
-      });
+    const targetFilename = buildFilename('created-by-img.kay.kr', {
+      custom:
+        aspectRatio !== null
+          ? cropSize
+          : customResolutionFlag && customResolution
+          ? customResolution
+          : undefined,
+      resolution,
+      quality,
+      extension,
+    });
+
+    resizeImage(inputElem, targetSize)
+      .then((canvas) => canvasToObjectURL(canvas, { mimeType: `image/${extension}`, quality }))
+      .then((blobUrl) => {
+        downloadImage(blobUrl, targetFilename);
+
+        URL.revokeObjectURL(blobUrl);
+      })
+      .catch(showAlert);
   };
 
   return (
     <div className="px-4 py-6 max-w-screen-sm mx-auto">
-      <h1 className="text-center font-bold font-mono text-2xl">Kay&apos;s Image Converter</h1>
+      <h1 className="text-center font-bold font-mono text-2xl">Kay&apos;s Image Resizer</h1>
       {!selectedImage ? (
         <DragDropBox className="mt-4 " onFileSelect={handleFileSelect} loading={loading} />
       ) : (
@@ -198,104 +239,100 @@ export default function IndexPage() {
           </div>
 
           <div className="mt-6">
-            <div className="space-y-4">
-              {/* Resolutions */}
-              <div>
-                <div className="flex items-end justify-between">
-                  <label>Resolution</label>
+            <Toggle
+              label="Custom Aspect Ratio (Crop)"
+              description="You can custom your desired aspect ratio by enabling this option."
+              enabled={aspectRatio !== null}
+              onChange={(enabled) => {
+                if (enabled) setAspectRatio(1);
+                else setAspectRatio(null);
+              }}
+            />
 
-                  <Switch.Group as="div" className="flex items-center justify-between space-x-2">
-                    <Switch.Label as="span" className="text-sm" passive>
-                      Custom
-                    </Switch.Label>
-                    <Switch
-                      checked={showCustom}
-                      onChange={setShowCustom}
-                      className={clsx(
-                        showCustom ? 'bg-blue-600' : 'bg-gray-200',
-                        'relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500',
-                      )}
-                    >
-                      <span
-                        aria-hidden="true"
-                        className={clsx(
-                          showCustom ? 'translate-x-5' : 'translate-x-0',
-                          'pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200',
-                        )}
-                      />
-                    </Switch>
-                  </Switch.Group>
-                </div>
-                <ResponsiveTabs
-                  className="mt-2"
-                  tabs={resTabs}
-                  state={resolution}
-                  setState={(resolution) => {
-                    setResolution(resolution);
-                    setCustomResolution(calcSize({ resolution, ...selectedImage }));
+            <Fade show={aspectRatio !== null} className="mt-4">
+              <Tabs
+                tabs={[
+                  { label: '1 / 1', value: 1 },
+                  { label: '4 / 3', value: 4 / 3 },
+                  { label: '3 / 4', value: 3 / 4 },
+                ]}
+                state={aspectRatio}
+                setState={(aspect) => {
+                  setAspectRatio(aspect);
+                  if (aspect) {
+                    setCropSize({ width: 720 * aspect, height: 720 });
+                  } else {
+                    setCropSize({ width: 720, height: 720 });
+                  }
+                }}
+              />
+              <div className="mt-4 relative w-full h-96">
+                <Cropper
+                  image={selectedImage.blobUrl}
+                  crop={crop}
+                  rotation={rotation}
+                  zoom={zoom}
+                  onCropChange={setCrop}
+                  onRotationChange={setRotation}
+                  onZoomChange={setZoom}
+                  aspect={aspectRatio ?? undefined}
+                  onCropComplete={(_croppedArea, croppedAreaPixels) => {
+                    const canvas = getCroppedCanvas(selectedImage.image, croppedAreaPixels);
+
+                    setCroppedCanvas(canvas);
                   }}
-                  disabled={showCustom}
                 />
-                {customResolution && (
-                  <Transition
-                    show={showCustom}
-                    className="mt-4 flex items-center space-x-4"
-                    enter="transition-opacity ease-out duration-150"
-                    enterFrom="opacity-0"
-                    enterTo="opacity-100"
-                    leave="transition-opacity ease-out duration-150"
-                    leaveFrom="opacity-100"
-                    leaveTo="opacity-0"
-                  >
-                    <div>
-                      <label htmlFor="width" className="sr-only">
-                        Width
-                      </label>
-                      <input
-                        type="number"
-                        name="width"
-                        id="width"
-                        className="shadow-sm block w-24 sm:text-sm border-gray-300 rounded-md"
-                        value={customResolution.width.toFixed(0).toString()}
-                        onChange={(e) => {
-                          const { width, height } = selectedImage;
-                          const newWidth = Number(e.target.value);
-                          const newHeight = (height / width) * newWidth;
-
-                          setCustomResolution({ width: newWidth, height: newHeight });
-                        }}
-                      />
-                    </div>
-                    <span aria-hidden className="text-sm font-medium text-gray-500">
-                      X
-                    </span>
-                    <div>
-                      <label htmlFor="height" className="sr-only">
-                        Height
-                      </label>
-                      <input
-                        type="number"
-                        name="height"
-                        id="height"
-                        className="shadow-sm block w-24 sm:text-sm border-gray-300 rounded-md"
-                        value={customResolution.height.toFixed(0).toString()}
-                        onChange={(e) => {
-                          const { width, height } = selectedImage;
-                          const newHeight = Number(e.target.value);
-                          const newWidth = (width / height) * newHeight;
-
-                          setCustomResolution({ width: newWidth, height: newHeight });
-                        }}
-                      />
-                    </div>
-                  </Transition>
-                )}
               </div>
+            </Fade>
 
+            {/* Resolutions */}
+            <div className="mt-4">
+              {aspectRatio === null ? (
+                <>
+                  <div className="flex items-end justify-between">
+                    <label>Resolution</label>
+
+                    <Toggle
+                      className="space-x-2"
+                      label="Custom"
+                      enabled={customResolutionFlag}
+                      onChange={setCustomResolutionFlag}
+                    />
+                  </div>
+                  <ResponsiveTabs
+                    className="mt-2"
+                    tabs={resTabs}
+                    state={resolution}
+                    setState={(resolution) => {
+                      setResolution(resolution);
+                      setCustomResolution(calcSize({ resolution, ...selectedImage }));
+                    }}
+                    disabled={customResolutionFlag}
+                  />
+                  {customResolution && (
+                    <Fade show={customResolutionFlag} className="mt-4">
+                      <SizeInputGroup
+                        size={customResolution}
+                        onChange={setCustomResolution}
+                        aspect={selectedImage.width / selectedImage.height}
+                      />
+                    </Fade>
+                  )}
+                </>
+              ) : (
+                <>
+                  <SizeInputGroup size={cropSize} onChange={setCropSize} aspect={aspectRatio} />
+                </>
+              )}
+            </div>
+          </div>
+
+          <div className="mt-6">
+            <div className="space-y-4">
               {/* Extensions */}
               <div>
                 <label>Format (Extension)</label>
-                <ResponsiveTabs
+                <Tabs
                   className="mt-2"
                   tabs={extensions}
                   state={extension}
@@ -306,12 +343,7 @@ export default function IndexPage() {
               {/* Qualities */}
               <div className={clsx({ hidden: extension === 'png' })}>
                 <label>Quality</label>
-                <ResponsiveTabs
-                  className="mt-2"
-                  tabs={qualities}
-                  state={quality}
-                  setState={setQuality}
-                />
+                <Tabs className="mt-2" tabs={qualities} state={quality} setState={setQuality} />
               </div>
             </div>
 
@@ -320,15 +352,8 @@ export default function IndexPage() {
               <Button color="blue" onClick={handleClickDownload}>
                 Download
               </Button>
-              <a ref={downloadButtonRef} className="hidden" />
             </div>
           </div>
-
-          <canvas
-            ref={canvasRef}
-            className="hidden"
-            {...(showCustom ? customResolution : calcSize({ ...selectedImage, resolution }))}
-          />
         </div>
       )}
     </div>
