@@ -134,7 +134,9 @@ export default function IndexPage() {
       URL.revokeObjectURL(selectedImage.blobUrl);
       setSelectedImage(null);
     }
+    setAspectRatio(null);
     setCustomResolution(null);
+    setCustomResolutionFlag(false);
     setCrop({ x: 0, y: 0 });
     setRotation(0);
     setZoom(1);
