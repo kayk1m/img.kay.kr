@@ -6,7 +6,6 @@ import useNProgress from 'next-use-nprogress';
 import Script from 'next/script';
 import { useEffect } from 'react';
 
-import { CommonLayout } from '$src/frontend/components/layout';
 import { Modal, Notification } from '$src/frontend/components/ui';
 import { useModal } from '$src/frontend/hooks/use-modal';
 import { useNoti } from '$src/frontend/hooks/use-noti';
@@ -14,6 +13,8 @@ import { isProd } from '$src/utils/env';
 import { GTM } from '$src/utils/tag-manager';
 
 import type { AppProps } from 'next/app';
+
+const gtmId = process.env.NEXT_PUBLIC_GTM_ID;
 
 export default function App({ Component, pageProps }: AppProps) {
   useNProgress({
@@ -27,7 +28,9 @@ export default function App({ Component, pageProps }: AppProps) {
   const { noti, closeNoti } = useNoti();
 
   useEffect(() => {
-    if (isProd()) GTM.initialize();
+    if (isProd() && gtmId) {
+      GTM.initialize(gtmId);
+    }
   }, []);
 
   return (
@@ -65,9 +68,7 @@ export default function App({ Component, pageProps }: AppProps) {
           },
         ]}
       />
-      <CommonLayout>
-        <Component {...pageProps} />
-      </CommonLayout>
+      <Component {...pageProps} />
 
       <Modal {...modal} close={closeModal} />
       <Notification {...noti} close={closeNoti} />

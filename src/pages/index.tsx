@@ -81,6 +81,7 @@ type SelectedImage = {
   height: number;
   size: number;
   file: File;
+  image: HTMLImageElement;
 };
 
 export default function IndexPage() {
@@ -127,6 +128,7 @@ export default function IndexPage() {
         height: image.naturalHeight,
         size: file.size,
         file,
+        image,
       });
       setCustomResolution(
         calcSize({ resolution: 720, width: image.naturalWidth, height: image.naturalHeight }),
@@ -137,33 +139,27 @@ export default function IndexPage() {
   };
 
   const handleClickDownload = () => {
-    if (!selectedImage) return;
+    if (!selectedImage || !canvasRef.current) return;
 
-    const image = new Image();
-    image.onload = () => {
-      if (!canvasRef.current) return;
+    const pica = Pica();
+    pica
+      .resize(selectedImage.image, canvasRef.current)
+      .then((elem) => pica.toBlob(elem, `image/${extension}`, quality))
+      .then((blob) => {
+        if (downloadButtonRef.current) {
+          const convertedBlobUrl = URL.createObjectURL(blob);
+          downloadButtonRef.current.href = convertedBlobUrl;
+          downloadButtonRef.current.download = buildFilename(selectedImage.name, {
+            custom: showCustom && customResolution ? customResolution : undefined,
+            resolution,
+            quality,
+            extension,
+          });
 
-      const pica = Pica();
-      pica
-        .resize(image, canvasRef.current)
-        .then((elem) => pica.toBlob(elem, `image/${extension}`, quality))
-        .then((blob) => {
-          if (downloadButtonRef.current) {
-            const convertedBlobUrl = URL.createObjectURL(blob);
-            downloadButtonRef.current.href = convertedBlobUrl;
-            downloadButtonRef.current.download = buildFilename(selectedImage.name, {
-              custom: showCustom && customResolution ? customResolution : undefined,
-              resolution,
-              quality,
-              extension,
-            });
-
-            downloadButtonRef.current.click();
-            URL.revokeObjectURL(convertedBlobUrl);
-          }
-        });
-    };
-    image.src = selectedImage.blobUrl;
+          downloadButtonRef.current.click();
+          URL.revokeObjectURL(convertedBlobUrl);
+        }
+      });
   };
 
   return (

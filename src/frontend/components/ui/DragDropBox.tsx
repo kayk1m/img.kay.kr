@@ -2,7 +2,6 @@ import clsx from 'clsx';
 import { DragEvent, useState } from 'react';
 
 import { ApiError } from '$src/defines/errors';
-import { Loading } from '$src/frontend/components/core';
 import { useId } from '$src/frontend/hooks/use-id';
 import { useNoti } from '$src/frontend/hooks/use-noti';
 import type { MaybePromise } from '$src/types';
@@ -77,7 +76,7 @@ export default function DragDropBox({ className, onFileSelect, onError, loading 
       {...handlers}
     >
       {loading ? (
-        <Loading />
+        <span>loading...</span>
       ) : hoverFlag ? (
         <p className="font-medium text-gray-700 pointer-events-none">drop a file here</p>
       ) : (
