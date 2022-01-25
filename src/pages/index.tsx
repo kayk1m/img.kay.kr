@@ -128,6 +128,15 @@ export default function IndexPage() {
       )
     : [];
 
+  const cropSizeButtons =
+    selectedImage && aspectRatio
+      ? resolutions.filter(
+          ({ value }) =>
+            (aspectRatio > 1 ? value * aspectRatio : value / aspectRatio) <=
+            Math.min(selectedImage.width, selectedImage.height),
+        )
+      : [];
+
   const initialize = () => {
     setLoading(false);
     if (selectedImage) {
@@ -333,7 +342,7 @@ export default function IndexPage() {
               ) : (
                 <>
                   <div className="flex flex-wrap space-x-2">
-                    {resTabs.map(({ label, value }) => (
+                    {cropSizeButtons.map(({ label, value }) => (
                       <Button
                         className="inline-flex"
                         key={label}
