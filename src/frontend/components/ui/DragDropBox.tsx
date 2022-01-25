@@ -106,7 +106,7 @@ export default function DragDropBox({ className, onFileSelect, onError, loading 
                 name="file-upload"
                 type="file"
                 className="sr-only"
-                accept=".jpg, .jpeg, .png .webp"
+                accept=".jpg, .jpeg, .png, .webp"
                 disabled={loading}
                 onChange={(e) => {
                   if (!e.target.files || !e.target.files[0]) return;
