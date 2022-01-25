@@ -1,6 +1,6 @@
 import { XIcon } from '@heroicons/react/outline';
 import clsx from 'clsx';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Cropper from 'react-easy-crop';
 
 import { SizeInputGroup } from '$src/frontend/components/custom';
@@ -121,10 +121,6 @@ export default function IndexPage() {
 
   // notifications
   const { showAlert } = useNoti();
-
-  useEffect(() => {
-    console.log('flag', customResolutionFlag);
-  }, [customResolutionFlag]);
 
   const resTabs = selectedImage
     ? resolutions.filter(
