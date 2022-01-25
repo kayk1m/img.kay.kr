@@ -103,7 +103,7 @@ export default function IndexPage() {
   const [loading, setLoading] = useState(false);
   const [selectedImage, setSelectedImage] = useState<SelectedImage | null>(null);
   const [resolution, setResolution] = useState<Resolution>(720);
-  const [quality, setQuality] = useState<Quality>(0.7);
+  const [quality, setQuality] = useState<Quality>(0.5);
   const [extension, setExtension] = useState<Extension>('jpeg');
   const [aspectRatio, setAspectRatio] = useState<number | null>(null);
   const [customResolution, setCustomResolution] = useState<{
@@ -199,6 +199,18 @@ export default function IndexPage() {
         URL.revokeObjectURL(blobUrl);
       })
       .catch(showAlert);
+  };
+
+  const handleCropSize = (size: number) => {
+    if (!aspectRatio) return;
+
+    const longSide = aspectRatio > 1 ? size * aspectRatio : size / aspectRatio;
+
+    if (aspectRatio > 1) {
+      setCropSize({ width: longSide, height: size });
+    } else {
+      setCropSize({ width: size, height: longSide });
+    }
   };
 
   return (
@@ -320,7 +332,25 @@ export default function IndexPage() {
                 </>
               ) : (
                 <>
-                  <SizeInputGroup size={cropSize} onChange={setCropSize} aspect={aspectRatio} />
+                  <div className="flex flex-wrap space-x-2">
+                    {resTabs.map(({ label, value }) => (
+                      <Button
+                        className="inline-flex"
+                        key={label}
+                        color="white"
+                        size="sm"
+                        onClick={() => handleCropSize(value)}
+                      >
+                        {label}
+                      </Button>
+                    ))}
+                  </div>
+                  <SizeInputGroup
+                    className="mt-2"
+                    size={cropSize}
+                    onChange={setCropSize}
+                    aspect={aspectRatio}
+                  />
                 </>
               )}
             </div>
