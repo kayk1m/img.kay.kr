@@ -33,7 +33,7 @@ export function rotateSize(
   };
 }
 
-export default function getCroppedCanvas(
+export function getCroppedCanvas(
   image: HTMLImageElement,
   pixelCrop: Area,
   rotation = 0,

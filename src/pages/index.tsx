@@ -14,7 +14,8 @@ import {
 } from '$src/frontend/components/ui';
 import { useNoti } from '$src/frontend/hooks/use-noti';
 import formatBytes from '$src/utils/format-bytes';
-import getCroppedCanvas, {
+import {
+  getCroppedCanvas,
   canvasToObjectURL,
   createImage,
   downloadImage,
