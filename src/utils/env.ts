@@ -9,3 +9,7 @@ export const isDev: () => boolean = () => {
 export const isProd: () => boolean = () => {
   return process.env.NODE_ENV === 'production';
 };
+
+export const isBrowser: () => boolean = () => {
+  return typeof window !== 'undefined';
+};
