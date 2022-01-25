@@ -114,7 +114,7 @@ export default function IndexPage() {
 
   // states for `react-easy-cropper`
   const [crop, setCrop] = useState({ x: 0, y: 0 });
-  const [rotation, setRotation] = useState(0);
+  // const [rotation, setRotation] = useState(0);
   const [zoom, setZoom] = useState(1);
   const [cropSize, setCropSize] = useState({ width: 720, height: 720 });
   const [croppedCanvas, setCroppedCanvas] = useState<HTMLCanvasElement | null>(null);
@@ -138,7 +138,7 @@ export default function IndexPage() {
     setCustomResolution(null);
     setCustomResolutionFlag(false);
     setCrop({ x: 0, y: 0 });
-    setRotation(0);
+    // setRotation(0);
     setZoom(1);
     setCropSize({ width: 720, height: 720 });
     if (croppedCanvas) croppedCanvas.remove();
@@ -269,10 +269,10 @@ export default function IndexPage() {
                 <Cropper
                   image={selectedImage.blobUrl}
                   crop={crop}
-                  rotation={rotation}
+                  // rotation={rotation}
                   zoom={zoom}
                   onCropChange={setCrop}
-                  onRotationChange={setRotation}
+                  // onRotationChange={setRotation}
                   onZoomChange={setZoom}
                   aspect={aspectRatio ?? undefined}
                   onCropComplete={(_croppedArea, croppedAreaPixels) => {
