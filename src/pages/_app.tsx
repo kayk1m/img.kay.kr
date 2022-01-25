@@ -15,6 +15,8 @@ import { GTM } from '$src/utils/tag-manager';
 
 import type { AppProps } from 'next/app';
 
+const gtmId = process.env.NEXT_PUBLIC_GTM_ID;
+
 export default function App({ Component, pageProps }: AppProps) {
   useNProgress({
     minimum: 0.3,
@@ -27,7 +29,9 @@ export default function App({ Component, pageProps }: AppProps) {
   const { noti, closeNoti } = useNoti();
 
   useEffect(() => {
-    if (isProd()) GTM.initialize();
+    if (isProd() && gtmId) {
+      GTM.initialize(gtmId);
+    }
   }, []);
 
   return (
