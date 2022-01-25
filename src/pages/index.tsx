@@ -6,6 +6,7 @@ import { useRef, useState } from 'react';
 
 import { Button, DragDropBox, ResponsiveTabs } from '$src/frontend/components/ui';
 import formatBytes from '$src/utils/format-bytes';
+import { createImage } from '$src/utils/image';
 
 const resolutions = [
   { label: '360p', value: 360 },
@@ -119,8 +120,7 @@ export default function IndexPage() {
     setLoading(true);
     const blobUrl = URL.createObjectURL(file);
 
-    const image = new Image();
-    image.onload = () => {
+    createImage(blobUrl).then((image) => {
       setSelectedImage({
         name: file.name,
         blobUrl,
@@ -134,8 +134,7 @@ export default function IndexPage() {
         calcSize({ resolution: 720, width: image.naturalWidth, height: image.naturalHeight }),
       );
       setLoading(false);
-    };
-    image.src = blobUrl;
+    });
   };
 
   const handleClickDownload = () => {
@@ -166,13 +165,7 @@ export default function IndexPage() {
     <div className="px-4 py-6 max-w-screen-sm mx-auto">
       <h1 className="text-center font-bold font-mono text-2xl">Kay&apos;s Image Converter</h1>
       {!selectedImage ? (
-        <DragDropBox
-          className="mt-4 "
-          onFileSelect={(file) => {
-            handleFileSelect(file);
-          }}
-          loading={loading}
-        />
+        <DragDropBox className="mt-4 " onFileSelect={handleFileSelect} loading={loading} />
       ) : (
         <div className="mt-4">
           <div className="lg:grid grid-cols-2 gap-4">
