@@ -6,6 +6,7 @@ import useNProgress from 'next-use-nprogress';
 import Script from 'next/script';
 import { useEffect } from 'react';
 
+import { Footer } from '$src/frontend/components/custom';
 import { Modal, Notification } from '$src/frontend/components/ui';
 import { useModal } from '$src/frontend/hooks/use-modal';
 import { useNoti } from '$src/frontend/hooks/use-noti';
@@ -69,6 +70,7 @@ export default function App({ Component, pageProps }: AppProps) {
         ]}
       />
       <Component {...pageProps} />
+      <Footer />
 
       <Modal {...modal} close={closeModal} />
       <Notification {...noti} close={closeNoti} />

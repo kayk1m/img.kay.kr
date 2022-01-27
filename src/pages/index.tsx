@@ -223,7 +223,7 @@ export default function IndexPage() {
   };
 
   return (
-    <div className="px-4 py-6 max-w-screen-sm mx-auto">
+    <div className="px-4 pt-6 pb-40 max-w-screen-sm mx-auto">
       <h1 className="text-center font-bold font-mono text-2xl">Kay&apos;s Image Resizer</h1>
       {!selectedImage ? (
         <DragDropBox className="mt-4 " onFileSelect={handleFileSelect} loading={loading} />

@@ -10,6 +10,7 @@
   "dependencies": {
     "@headlessui/react": "1.4.2",
     "@heroicons/react": "1.0.5",
+    "bowser": "2.11.0",
     "clsx": "1.1.1",
     "http-status-codes": "2.2.0",
     "joi": "17.5.0",
