@@ -50,7 +50,7 @@ export default function Footer({ className }: Props) {
       <footer className={clsx(className, 'py-16 bg-gray-50 px-4')}>
         <div className="lg:grid max-w-5xl grid-cols-2 mx-auto">
           <section className="px-8 flex lg:flex-col justify-center lg:justify-start items-center lg:space-y-6">
-            <NextImage src={nerdsLabImage} width={320} height={180} loading="eager" />
+            <NextImage src={nerdsLabImage} width={320} height={180} loading="eager" unoptimized />
             <TextLogo className="h-[120px]" />
           </section>
           <section className="my-16 lg:my-0 max-w-xs mx-auto">
