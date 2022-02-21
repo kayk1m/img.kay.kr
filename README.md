@@ -6,6 +6,8 @@
 
 You can see [the live web app (PWA) here](https://img.kay.kr) which is deployed via [Vercel](https://vercel.com).
 
+This website has been created by `create-next-app` with [this template](https://github.com/coxwave/nextjs-template).
+
 ## Features
 
 - In browser resize (which means...)
