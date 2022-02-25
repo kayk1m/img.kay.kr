@@ -21,6 +21,9 @@ export default function ResponsiveTabs<T>({
   disabled,
   fallbackTab,
 }: Props<T>) {
+  if (!tabs.find(({ value }) => value === state)?.label ?? (fallbackTab ?? tabs[0]).label)
+    return null;
+
   return (
     <div className={className}>
       <div className="sm:hidden">
