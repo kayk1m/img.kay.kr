@@ -6,7 +6,7 @@ import { useId } from '$src/frontend/hooks/use-id';
 import { useNoti } from '$src/frontend/hooks/use-noti';
 import type { MaybePromise } from '$src/types';
 
-const VALID_FILE_TYPES = ['image/jpg', 'image/jpeg', 'image/png', 'image/webp'];
+const VALID_FILE_TYPES = ['image/jpg', 'image/jpeg', 'image/png', 'image/webp', 'image/heic'];
 
 interface Props {
   className?: string;
@@ -106,7 +106,7 @@ export default function DragDropBox({ className, onFileSelect, onError, loading 
                 name="file-upload"
                 type="file"
                 className="sr-only"
-                accept=".jpg, .jpeg, .png, .webp"
+                accept=".jpg, .jpeg, .png, .webp .heic .heif image/heif"
                 disabled={loading}
                 onChange={(e) => {
                   if (!e.target.files || !e.target.files[0]) return;
@@ -116,7 +116,7 @@ export default function DragDropBox({ className, onFileSelect, onError, loading 
             </label>
             <p className="pl-1">or drag and drop</p>
           </div>
-          <p className="text-xs text-gray-500">PNG, JPG, JPEG, WEBP in any size</p>
+          <p className="text-xs text-gray-500">PNG, JPG, JPEG, WEBP, HEIC in any size</p>
         </div>
       )}
     </div>
