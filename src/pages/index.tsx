@@ -1,6 +1,7 @@
 import { XIcon } from '@heroicons/react/outline';
+import heic2any from 'alexcorvi-heic2any';
 import clsx from 'clsx';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import Cropper from 'react-easy-crop';
 
 import { SizeInputGroup } from '$src/frontend/components/custom';
@@ -102,7 +103,7 @@ export default function IndexPage() {
   const [loading, setLoading] = useState(false);
   const [selectedImage, setSelectedImage] = useState<SelectedImage | null>(null);
   const [resolution, setResolution] = useState<Resolution>(720);
-  const [quality, setQuality] = useState<Quality>(0.5);
+  const [quality, setQuality] = useState<Quality>(0.7);
   const [extension, setExtension] = useState<Extension>('jpeg');
   const [aspectRatio, setAspectRatio] = useState<number | null>(null);
   const [customResolution, setCustomResolution] = useState<{
@@ -153,28 +154,36 @@ export default function IndexPage() {
     setCroppedCanvas(null);
   };
 
-  const handleFileSelect = (file: File) => {
-    setLoading(true);
-    const blobUrl = URL.createObjectURL(file);
+  const handleFileSelect = useCallback(
+    async (file: File) => {
+      setLoading(true);
 
-    createImage(blobUrl)
-      .then((image) => {
-        setSelectedImage({
-          name: file.name,
-          blobUrl,
-          width: image.naturalWidth,
-          height: image.naturalHeight,
-          size: file.size,
-          file,
-          image,
-        });
-        setCustomResolution(
-          calcSize({ resolution, width: image.naturalWidth, height: image.naturalHeight }),
-        );
-      })
-      .catch(showAlert)
-      .finally(() => setLoading(false));
-  };
+      const blobUrl = URL.createObjectURL(
+        file.type === 'image/heic'
+          ? ((await heic2any({ blob: file, toType: 'jpeg', quality: 0.9 })) as never)
+          : file,
+      );
+
+      createImage(blobUrl)
+        .then((image) => {
+          setSelectedImage({
+            name: file.name,
+            blobUrl,
+            width: image.naturalWidth,
+            height: image.naturalHeight,
+            size: file.size,
+            file,
+            image,
+          });
+          setCustomResolution(
+            calcSize({ resolution, width: image.naturalWidth, height: image.naturalHeight }),
+          );
+        })
+        .catch(showAlert)
+        .finally(() => setLoading(false));
+    },
+    [resolution, showAlert],
+  );
 
   const handleClickDownload = () => {
     if (!selectedImage) return;
