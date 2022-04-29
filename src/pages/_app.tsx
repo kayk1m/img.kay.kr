@@ -1,8 +1,6 @@
 import '$src/assets/main.css';
-import 'nprogress/nprogress.css';
 
 import { DefaultSeo } from 'next-seo';
-import useNProgress from 'next-use-nprogress';
 import Script from 'next/script';
 import { useEffect } from 'react';
 
@@ -18,13 +16,6 @@ import type { AppProps } from 'next/app';
 const gtmId = process.env.NEXT_PUBLIC_GTM_ID;
 
 export default function App({ Component, pageProps }: AppProps) {
-  useNProgress({
-    minimum: 0.3,
-    easing: 'ease',
-    speed: 500,
-    showSpinner: false,
-  });
-
   const { modal, closeModal } = useModal();
   const { noti, closeNoti } = useNoti();
 
