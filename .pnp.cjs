@@ -53,6 +53,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["http-status-codes", "npm:2.2.0"],\
             ["joi", "npm:17.6.0"],\
             ["ky", "npm:0.30.0"],\
+            ["minimist", "npm:1.2.6"],\
             ["next", "virtual:dc3fc578bfa5e06182a4d2be39ede0bc5b74940b1ffe0d70c26892ab140a4699787750fba175dc306292e80b4aa2c8c5f68c2a821e69b2c37e360c0dff36ff66#npm:12.1.5"],\
             ["next-pwa", "virtual:dc3fc578bfa5e06182a4d2be39ede0bc5b74940b1ffe0d70c26892ab140a4699787750fba175dc306292e80b4aa2c8c5f68c2a821e69b2c37e360c0dff36ff66#npm:5.5.2"],\
             ["next-seo", "virtual:dc3fc578bfa5e06182a4d2be39ede0bc5b74940b1ffe0d70c26892ab140a4699787750fba175dc306292e80b4aa2c8c5f68c2a821e69b2c37e360c0dff36ff66#npm:5.4.0"],\
@@ -7979,6 +7980,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["http-status-codes", "npm:2.2.0"],\
             ["joi", "npm:17.6.0"],\
             ["ky", "npm:0.30.0"],\
+            ["minimist", "npm:1.2.6"],\
             ["next", "virtual:dc3fc578bfa5e06182a4d2be39ede0bc5b74940b1ffe0d70c26892ab140a4699787750fba175dc306292e80b4aa2c8c5f68c2a821e69b2c37e360c0dff36ff66#npm:12.1.5"],\
             ["next-pwa", "virtual:dc3fc578bfa5e06182a4d2be39ede0bc5b74940b1ffe0d70c26892ab140a4699787750fba175dc306292e80b4aa2c8c5f68c2a821e69b2c37e360c0dff36ff66#npm:5.5.2"],\
             ["next-seo", "virtual:dc3fc578bfa5e06182a4d2be39ede0bc5b74940b1ffe0d70c26892ab140a4699787750fba175dc306292e80b4aa2c8c5f68c2a821e69b2c37e360c0dff36ff66#npm:5.4.0"],\

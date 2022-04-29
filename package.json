@@ -16,6 +16,7 @@
     "http-status-codes": "2.2.0",
     "joi": "17.6.0",
     "ky": "0.30.0",
+    "minimist": "1.2.6",
     "next": "12.1.5",
     "next-pwa": "5.5.2",
     "next-seo": "5.4.0",
