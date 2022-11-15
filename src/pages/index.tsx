@@ -1,6 +1,5 @@
 import { XIcon } from '@heroicons/react/outline';
 import heic2any from 'alexcorvi-heic2any';
-import clsx from 'clsx';
 import { useCallback, useState } from 'react';
 import Cropper from 'react-easy-crop';
 
@@ -40,7 +39,7 @@ const qualities = [
 const extensions = [
   { label: 'webp', value: 'webp' },
   { label: 'jpeg', value: 'jpeg' },
-  { label: 'png', value: 'png' },
+  // { label: 'png', value: 'png' },
 ] as const;
 
 type Resolution = typeof resolutions[number]['value'];
@@ -73,7 +72,8 @@ function buildFilename(
   },
 ) {
   const { custom, resolution, quality, extension } = options;
-  const isLossy = extension !== 'png';
+  // const isLossy = extension !== 'png';
+  const isLossy = true;
 
   const nameWithoutExt = name.includes('.') ? name.split('.').slice(0, -1).join('.') : name;
   const qualityLevel = qualities.find(({ value }) => value === quality)!.label;
@@ -387,7 +387,8 @@ export default function IndexPage() {
               </div>
 
               {/* Qualities */}
-              <div className={clsx({ hidden: extension === 'png' })}>
+              {/* <div className={clsx({hidden: extension === 'png' })}> */}
+              <div>
                 <label>Quality</label>
                 <Tabs className="mt-2" tabs={qualities} state={quality} setState={setQuality} />
               </div>
