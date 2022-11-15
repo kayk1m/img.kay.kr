@@ -22,6 +22,14 @@ import {
   resizeImage,
 } from '$src/utils/image';
 
+const cropOptions = [
+  { label: '16 / 9', value: 16 / 9 },
+  { label: '4 / 3', value: 4 / 3 },
+  { label: '1 / 1', value: 1 },
+  { label: '3 / 4', value: 3 / 4 },
+  { label: '9 / 16', value: 9 / 16 },
+];
+
 const resolutions = [
   { label: '360p', value: 360 },
   { label: '480p', value: 480 },
@@ -279,11 +287,7 @@ export default function IndexPage() {
 
             <Fade show={aspectRatio !== null} className="mt-4">
               <Tabs
-                tabs={[
-                  { label: '1 / 1', value: 1 },
-                  { label: '4 / 3', value: 4 / 3 },
-                  { label: '3 / 4', value: 3 / 4 },
-                ]}
+                tabs={cropOptions}
                 state={aspectRatio}
                 setState={(aspect) => {
                   setAspectRatio(aspect);
