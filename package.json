@@ -5,7 +5,8 @@
     "build": "next build",
     "lint": "next lint",
     "start": "next start",
-    "clean": "make clean"
+    "clean": "make clean",
+    "prepare": "yarn dlx @yarnpkg/sdks vscode"
   },
   "dependencies": {
     "@headlessui/react": "1.6.0",
