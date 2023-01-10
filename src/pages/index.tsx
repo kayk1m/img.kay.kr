@@ -130,6 +130,8 @@ export default function IndexPage() {
   // notifications
   const { showAlert } = useNoti();
 
+  //
+
   const resTabs = selectedImage
     ? resolutions.filter(
         ({ value }) => value <= Math.min(selectedImage.width, selectedImage.height),
